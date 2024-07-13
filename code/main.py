@@ -1,5 +1,14 @@
 import pygame
 import random
+from random import randint
+
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load("../images/player.png")
+        self.rect = self.image.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+
 
 # General setup
 pygame.init()
@@ -9,9 +18,11 @@ clock = pygame.time.Clock()
 running = True
 pygame.mixer.music.load("../audio/n-Dimensions (Main Theme).mp3")
 
+player = Player()
+
 # Image imports
-player_surf = pygame.image.load("../images/player.png")
-player_rect = player_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+# player_surf = pygame.image.load("../images/player.png")
+# player_rect = player_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 big_rock = pygame.image.load("../images/meteorBig.png")
 small_rock = pygame.image.load("../images/meteorSmall.png")
 big_star = pygame.image.load("../images/starBig.png")
@@ -50,23 +61,23 @@ while running:
             running = False
 
     # THE MOVEMENT FOR THE SPACESHIP
-    keys = pygame.key.get_pressed()
-    player_direction_x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
-    player_direction_y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
+    # keys = pygame.key.get_pressed()
+    # player_direction_x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
+    # player_direction_y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
 
-    # Update player position
-    player_rect.x += player_direction_x * 5
-    player_rect.y += player_direction_y * 5
-
-    # Ensure the player stays within the screen bounds
-    if player_rect.left < 0:
-        player_rect.left = 0
-    if player_rect.right > WINDOW_WIDTH:
-        player_rect.right = WINDOW_WIDTH
-    if player_rect.top < 0:
-        player_rect.top = 0
-    if player_rect.bottom > WINDOW_HEIGHT:
-        player_rect.bottom = WINDOW_HEIGHT
+    # # Update player position
+    # player_rect.x += player_direction_x * 5
+    # player_rect.y += player_direction_y * 5
+    #
+    # # Ensure the player stays within the screen bounds
+    # if player_rect.left < 0:
+    #     player_rect.left = 0
+    # if player_rect.right > WINDOW_WIDTH:
+    #     player_rect.right = WINDOW_WIDTH
+    # if player_rect.top < 0:
+    #     player_rect.top = 0
+    # if player_rect.bottom > WINDOW_HEIGHT:
+    #     player_rect.bottom = WINDOW_HEIGHT
 
     screen.fill("black")
 
@@ -89,8 +100,8 @@ while running:
         screen.blit(rock['surf'], (rock['x'], rock['y']))
 
     # Draw the player ship
-    screen.blit(player_surf, player_rect.topleft)
-
+   # screen.blit(player_surf, player_rect.topleft)
+    screen.blit(player.image, player.rect)
     pygame.display.update()
     clock.tick(60)
 
