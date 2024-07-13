@@ -3,13 +3,15 @@ import random
 
 # General setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 clock = pygame.time.Clock()
 running = True
 pygame.mixer.music.load("../audio/n-Dimensions (Main Theme).mp3")
 
 # Image imports
 player_surf = pygame.image.load("../images/player.png")
+player_rect = player_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 big_rock = pygame.image.load("../images/meteorBig.png")
 small_rock = pygame.image.load("../images/meteorSmall.png")
 big_star = pygame.image.load("../images/starBig.png")
@@ -22,9 +24,10 @@ for i in range(num_stars):
     star = {
         'surf': random.choice([big_star, small_star]),
         'x': random.randint(0, screen.get_width()),
-        'y': random.randint(0, screen.get_width())
+        'y': random.randint(0, screen.get_height())  # Corrected to use screen height
     }
     stars.append(star)
+
 # Rock attributes
 num_rocks = 5  # Number of rocks
 space_rocks = []
@@ -38,15 +41,36 @@ for i in range(num_rocks):
         'speed_y': random.randint(1, 7)  # Random vertical speed
     }
     space_rocks.append(rock)
+
 pygame.mixer.music.play()
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    mouse_x, mouse_y = pygame.mouse.get_pos()  # Update mouse position
+    # THE MOVEMENT FOR THE SPACESHIP
+    keys = pygame.key.get_pressed()
+    player_direction_x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
+    player_direction_y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
+
+    # Update player position
+    player_rect.x += player_direction_x * 5
+    player_rect.y += player_direction_y * 5
+
+    # Ensure the player stays within the screen bounds
+    if player_rect.left < 0:
+        player_rect.left = 0
+    if player_rect.right > WINDOW_WIDTH:
+        player_rect.right = WINDOW_WIDTH
+    if player_rect.top < 0:
+        player_rect.top = 0
+    if player_rect.bottom > WINDOW_HEIGHT:
+        player_rect.bottom = WINDOW_HEIGHT
 
     screen.fill("black")
+
+    # Draw the stars
     for star in stars:
         screen.blit(star['surf'], (star['x'], star['y']))
 
@@ -64,7 +88,8 @@ while running:
         # Draw the rock
         screen.blit(rock['surf'], (rock['x'], rock['y']))
 
-    screen.blit(player_surf, (mouse_x, mouse_y))
+    # Draw the player ship
+    screen.blit(player_surf, player_rect.topleft)
 
     pygame.display.update()
     clock.tick(60)
