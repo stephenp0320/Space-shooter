@@ -6,6 +6,7 @@ pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
+pygame.mixer.music.load("../audio/n-Dimensions (Main Theme).mp3")
 
 # Image imports
 player_surf = pygame.image.load("../images/player.png")
@@ -37,7 +38,7 @@ for i in range(num_rocks):
         'speed_y': random.randint(1, 7)  # Random vertical speed
     }
     space_rocks.append(rock)
-
+pygame.mixer.music.play()
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
