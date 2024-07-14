@@ -2,6 +2,7 @@ import pygame
 import random
 from random import randint
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, groups):
         super().__init__(groups)
@@ -52,6 +53,7 @@ class Laser(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.kill()
 
+
 class Rock(pygame.sprite.Sprite):
     def __init__(self, image, groups):
         super().__init__(groups)
@@ -71,6 +73,7 @@ class Rock(pygame.sprite.Sprite):
             self.rect.x = -self.rect.width
         if self.rect.y > WINDOW_HEIGHT:
             self.rect.y = -self.rect.height
+
 
 # General setup
 pygame.init()
@@ -108,12 +111,14 @@ for i in range(num_rocks):
     image = random.choice([big_rock_img, small_rock_img])
     Rock(image, [all_sprites, rocks])
 
-pygame.mixer.music.play()
 
+pygame.mixer.music.play()
+font = pygame.font.Font(None, 36)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
 
     # Update all sprites
     all_sprites.update()
@@ -122,6 +127,12 @@ while running:
     collisions = pygame.sprite.groupcollide(player.lasers, rocks, True, True)
     if collisions:
         print("Rock exploded!")
+        num_rocks -= 1
+        print(num_rocks)
+
+        if num_rocks == 0:
+            print("you won")
+            running = False
 
     # Check for collisions between player and rocks
     if pygame.sprite.spritecollide(player, rocks, False):
@@ -136,6 +147,9 @@ while running:
 
     # Draw all sprites
     all_sprites.draw(screen)
+
+    rock_count = font.render(f'Rocks left: {num_rocks}', True, (255, 255, 255))
+    screen.blit(rock_count, (10, 10))
 
     pygame.display.update()
     clock.tick(60)
