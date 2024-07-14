@@ -86,10 +86,10 @@ pygame.mixer.music.load("../audio/n-Dimensions (Main Theme).mp3")
 all_sprites = pygame.sprite.Group()
 rocks = pygame.sprite.Group()
 player = Player(all_sprites)
-
+health_bar = 100
 # Image imports
-big_rock_img = pygame.image.load("../images/meteorBig.png")
-small_rock_img = pygame.image.load("../images/meteorSmall.png")
+big_rock_img = pygame.image.load("../images/enemyUFO.png")
+small_rock_img = pygame.image.load("../images/enemyShip.png")
 big_star = pygame.image.load("../images/starBig.png")
 small_star = pygame.image.load("../images/starSmall.png")
 
@@ -137,7 +137,9 @@ while running:
     # Check for collisions between player and rocks
     if pygame.sprite.spritecollide(player, rocks, False):
         print("Collision detected!")
-        running = False  # End the game on collision
+        health_bar -= 10
+        if health_bar == 0:
+            running = False  # End the game on collision
 
     screen.fill("black")
 
@@ -148,7 +150,7 @@ while running:
     # Draw all sprites
     all_sprites.draw(screen)
 
-    rock_count = font.render(f'Rocks left: {num_rocks}', True, (255, 255, 255))
+    rock_count = font.render(f'Aliens left: {num_rocks}', True, (255, 255, 255))
     screen.blit(rock_count, (10, 10))
 
     pygame.display.update()
